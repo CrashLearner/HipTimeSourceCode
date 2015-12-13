@@ -1,8 +1,64 @@
+
+<!-- Checks to see if a user is signed in, if one is, it will list its checklist. -->
+<!-- If not, it will render the landing page that asks the user to sign up or login. -->
 <% if user_signed_in? %>
-	<% @items.each do |item| %>
-		<h2><%= link_to item.title, item %></h2>
-		<p><%= item.description %></p>
-	<% end %>
+	<div class="col-md-10 col-md-offset-1">
+		<% @items.each do |item| %> 
+			<div class="index-wrapper">
+				
+				<% if item.completed? %>
+<!-- For Completed Items-->
+					<div class="row item">
+
+						<div class="col-md-2">
+							<p><%= link_to complete_item_path(item), method: :patch do %></p>
+								<i class="fa fa-check fa-lg"></i>
+							<% end %>
+						</div>
+			
+						<div class="col-md-2">
+							<p><%= link_to item, method: :delete, data: { confirm: "Are you sure?" } do %></p>
+								<i class="fa fa-trash fa-lg"></i>
+							<% end %>
+						</div>
+
+						<div class="col-md-8">
+							<h2 style="opacity: 0.5;" class="item-title"><strike><%= link_to item.title, item %></strike></h2>
+							<p style="opacity: 0.5;" class="item-sub-title item-desc"><%= item.description %></p>
+							<p style="opacity: 0.5;" class="time-created-at item-sub-title">Completed <%= time_ago_in_words(item.completed_at) %> ago</p>
+						</div>
+							
+					</div>
+
+				<% else %>
+<!-- For Items NOT Completed -->
+
+					<div class="row item">
+
+						<div class="col-md-2">
+							<p><%= link_to complete_item_path(item), method: :patch do %></p>
+								<i class="fa fa-check fa-lg"></i>
+							<% end %>
+						</div>
+
+						<div class="col-md-8">
+							<h2 class="item-title"><%= link_to item.title, item %></h2>
+							<p class="item-sub-title item-desc"><%= item.description %></p>
+							<p style="opacity: 0.5;" class="time-created-at item-sub-title">Created <%= time_ago_in_words(item.created_at) %> ago</p>
+						</div>
+						
+						<div class="col-md-2">
+							<p><%= link_to item, method: :delete, data: { confirm: "Are you sure?" } do %></p>
+								<i class="fa fa-trash fa-lg"></i>
+							<% end %>
+						</div>
+					</div>
+
+				<% end %>
+			</div>
+		<% end %>	
+	</div>
+
 <% else %>
 	<%= render 'welcome_page' %>
-<% end %>
+<% end %>	
